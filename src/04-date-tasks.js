@@ -19,8 +19,8 @@
  *    'Tue, 26 Jan 2016 13:48:02 GMT' => Date()
  *    'Sun, 17 May 1998 03:00:00 GMT+01' => Date()
  */
-function parseDataFromRfc2822(/* value */) {
-  throw new Error('Not implemented');
+function parseDataFromRfc2822(value) {
+  return new Date(value);
 }
 
 /**
@@ -34,8 +34,8 @@ function parseDataFromRfc2822(/* value */) {
  *    '2016-01-19T16:07:37+00:00'    => Date()
  *    '2016-01-19T08:07:37Z' => Date()
  */
-function parseDataFromIso8601(/* value */) {
-  throw new Error('Not implemented');
+function parseDataFromIso8601(value) {
+  return new Date(value);
 }
 
 
@@ -53,8 +53,10 @@ function parseDataFromIso8601(/* value */) {
  *    Date(2012,1,1)    => true
  *    Date(2015,1,1)    => false
  */
-function isLeapYear(/* date */) {
-  throw new Error('Not implemented');
+function isLeapYear(date) {
+  date.setMonth(1, 28);
+  date.setDate(date.getDate() + 1);
+  return date.getDate() === 29;
 }
 
 
@@ -73,8 +75,10 @@ function isLeapYear(/* date */) {
  *    Date(2000,1,1,10,0,0),  Date(2000,1,1,10,0,0,250)     => "00:00:00.250"
  *    Date(2000,1,1,10,0,0),  Date(2000,1,1,15,20,10,453)   => "05:20:10.453"
  */
-function timeSpanToString(/* startDate, endDate */) {
-  throw new Error('Not implemented');
+function timeSpanToString(startDate, endDate) {
+  const gap = new Date(endDate - startDate - 10800000);
+  const res = `${gap.getHours().toString().padStart(2, '0')}:${gap.getMinutes().toString().padStart(2, '0')}:${gap.getSeconds().toString().padStart(2, '0')}.${gap.getMilliseconds().toString().padStart(3, '0')}`;
+  return res;
 }
 
 
@@ -94,8 +98,13 @@ function timeSpanToString(/* startDate, endDate */) {
  *    Date.UTC(2016,3,5,18, 0) => Math.PI
  *    Date.UTC(2016,3,5,21, 0) => Math.PI/2
  */
-function angleBetweenClockHands(/* date */) {
-  throw new Error('Not implemented');
+function angleBetweenClockHands(date) {
+  const date1 = new Date(date.getTime() - 10800000);
+  // eslint-disable-next-line
+  const hours = (date1.getHours() >= 12 ? date1.getHours() - 12 : date1.getHours()) * 30 + date1.getMinutes() / 2;
+  const minutes = date1.getMinutes() * 6;
+  // eslint-disable-next-line
+  return Math.min(Math.abs(hours - minutes), 360 - Math.abs(hours - minutes)) * Math.PI / 180;
 }
 
 
